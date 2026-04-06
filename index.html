@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TruthScan AI — Fake Content Detection Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="engine-wrapper">
+  <div class="engine-header">
+    <div class="engine-badge">TruthScan AI</div>
+    <h1 class="engine-title">Fake Content <span>Detection Engine</span></h1>
+    <p class="engine-sub">Powered by multi-signal analysis — text, image, video, and URL intelligence</p>
+  </div>
+
+  <div id="inputSection">
+    <div class="glass-card input-panel">
+      <div class="tab-row" id="tabRow">
+        <button class="tab-btn active" data-tab="text"><span class="tab-icon">📝</span> Text</button>
+        <button class="tab-btn" data-tab="image"><span class="tab-icon">🖼</span> Image</button>
+        <button class="tab-btn" data-tab="video"><span class="tab-icon">🎬</span> Video</button>
+        <button class="tab-btn" data-tab="audio"><span class="tab-icon">🎙</span> Audio</button>
+        <button class="tab-btn" data-tab="url"><span class="tab-icon">🔗</span> URL</button>
+        <button class="tab-btn" data-tab="doc"><span class="tab-icon">📄</span> Document</button>
+      </div>
+
+      <!-- Text Tab -->
+      <div class="input-area active" id="tab-text">
+        <textarea class="text-input" id="textInput" placeholder="Paste article, social media post, message, or any text content you'd like to analyze for authenticity..."></textarea>
+      </div>
+
+      <!-- Image Tab -->
+      <div class="input-area" id="tab-image">
+        <div class="drop-zone" id="imageDrop" onclick="document.getElementById('imageFile').click()">
+          <span class="drop-icon">🖼</span>
+          <div class="drop-label"><strong>Drop an image here</strong> or click to browse</div>
+          <div class="drop-hint">PNG · JPG · WEBP · GIF · up to 20MB</div>
+          <input type="file" id="imageFile" accept="image/*">
+        </div>
+        <div class="file-preview" id="imagePreview">
+          <img class="file-thumb" id="imageThumb" src="" alt="">
+          <div class="file-info">
+            <div class="file-name" id="imageName"></div>
+            <div class="file-size" id="imageSize"></div>
+          </div>
+          <span class="file-remove" onclick="clearFile('image')">✕</span>
+        </div>
+      </div>
+
+      <!-- Video Tab -->
+      <div class="input-area" id="tab-video">
+        <div class="drop-zone" id="videoDrop" onclick="document.getElementById('videoFile').click()">
+          <span class="drop-icon">🎬</span>
+          <div class="drop-label"><strong>Drop a video here</strong> or click to browse</div>
+          <div class="drop-hint">MP4 · MOV · WEBM · AVI · up to 500MB</div>
+          <input type="file" id="videoFile" accept="video/*">
+        </div>
+        <div class="file-preview" id="videoPreview">
+          <div class="file-thumb" style="background:rgba(167,139,250,0.15);display:flex;align-items:center;justify-content:center;font-size:22px;">🎬</div>
+          <div class="file-info">
+            <div class="file-name" id="videoName"></div>
+            <div class="file-size" id="videoSize"></div>
+          </div>
+          <span class="file-remove" onclick="clearFile('video')">✕</span>
+        </div>
+      </div>
+
+      <!-- Audio Tab -->
+      <div class="input-area" id="tab-audio">
+        <div class="drop-zone" id="audioDrop" onclick="document.getElementById('audioFile').click()">
+          <span class="drop-icon">🎙</span>
+          <div class="drop-label"><strong>Drop an audio file here</strong> or click to browse</div>
+          <div class="drop-hint">MP3 · WAV · M4A · OGG · up to 100MB</div>
+          <input type="file" id="audioFile" accept="audio/*">
+        </div>
+        <div class="file-preview" id="audioPreview">
+          <div class="file-thumb" style="background:rgba(0,245,196,0.1);display:flex;align-items:center;justify-content:center;font-size:22px;">🎵</div>
+          <div class="file-info">
+            <div class="file-name" id="audioName"></div>
+            <div class="file-size" id="audioSize"></div>
+          </div>
+          <span class="file-remove" onclick="clearFile('audio')">✕</span>
+        </div>
+      </div>
+
+      <!-- URL Tab -->
+      <div class="input-area" id="tab-url">
+        <input class="url-input" id="urlInput" type="url" placeholder="https://example.com/article-or-post-to-analyze">
+        <div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.25);font-family:var(--mono);">Supports: news articles, social media, YouTube, Reddit, blogs, and more</div>
+      </div>
+
+      <!-- Document Tab -->
+      <div class="input-area" id="tab-doc">
+        <div class="drop-zone" onclick="document.getElementById('docFile').click()">
+          <span class="drop-icon">📄</span>
+          <div class="drop-label"><strong>Drop a document here</strong> or click to browse</div>
+          <div class="drop-hint">PDF · DOCX · TXT · CSV · up to 25MB</div>
+          <input type="file" id="docFile" accept=".pdf,.doc,.docx,.txt,.csv">
+        </div>
+        <div class="file-preview" id="docPreview">
+          <div class="file-thumb" style="background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;font-size:22px;">📄</div>
+          <div class="file-info">
+            <div class="file-name" id="docName"></div>
+            <div class="file-size" id="docSize"></div>
+          </div>
+          <span class="file-remove" onclick="clearFile('doc')">✕</span>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="options-row">
+        <label class="check-label"><input type="checkbox" checked id="chkDeep"><span class="check-box">✓</span> Deep scan</label>
+        <label class="check-label"><input type="checkbox" checked id="chkMeta"><span class="check-box">✓</span> Metadata analysis</label>
+        <label class="check-label"><input type="checkbox" id="chkSrc"><span class="check-box">✓</span> Source verification</label>
+        <label class="check-label"><input type="checkbox" id="chkHistory"><span class="check-box">✓</span> Historical cross-check</label>
+      </div>
+
+      <button class="scan-btn" id="scanBtn" onclick="runScan()">
+        <div class="progress-bar" id="progressBar"></div>
+        <span class="btn-icon">🔍</span>
+        <span class="btn-text" id="btnText">Analyze Content</span>
+      </button>
+    </div>
+
+    <!-- Scanning Overlay -->
+    <div class="glass-card scanning-overlay" id="scanningOverlay">
+      <div class="scan-pulse"></div>
+      <div class="scan-message" id="scanMsg">initializing scan engines...</div>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-section" id="resultsSection">
+    <div class="verdict-card" id="verdictCard">
+      <div class="verdict-top">
+        <div>
+          <div class="verdict-label">Detection Result</div>
+          <div class="verdict-title" id="verdictTitle">—</div>
+          <div style="margin-top:0.35rem;font-size:12px;font-family:var(--mono);opacity:0.4;" id="verdictMeta"></div>
+        </div>
+        <div class="confidence-ring">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle class="ring-bg" cx="40" cy="40" r="33"/>
+            <circle class="ring-fill" id="ringFill" cx="40" cy="40" r="33" stroke-dasharray="0 207" stroke-dashoffset="0"/>
+          </svg>
+          <div class="ring-label">
+            <div class="ring-pct" id="ringPct">0%</div>
+            <div class="ring-sub">confidence</div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict-summary" id="verdictSummary"></div>
+      <div class="timeline-strip" id="timeline" title="Signal intensity over content segments"></div>
+    </div>
+
+    <div class="signals-grid" id="signalsGrid"></div>
+
+    <div class="glass-card detail-panel">
+      <div class="detail-title">Analysis Details</div>
+      <div id="detailList"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetScan()">↩ Analyze another piece of content</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
